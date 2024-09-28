@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
+import 'package:wellness_app/dashboard.dart';
 import 'package:wellness_app/form_pages.dart';
 import 'package:wellness_app/timer.dart';
 
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Mubu',
       theme: ThemeData(
         colorScheme: ColorScheme.dark(
           surfaceContainerHigh: Color.fromARGB(255, 45, 44, 44),
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
           primary: Color.fromARGB(255, 241, 183, 76),
           surfaceContainerLowest: Color.fromARGB(255, 32, 32, 32),
           onSurface: Color.fromARGB(255, 255, 255, 255),
+          secondary: Color.fromARGB(255, 241, 183, 76),
           ),
           fontFamily: "Outfit",
         useMaterial3: true,
@@ -39,13 +41,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var pages =  [ FirstPage(),SecondPage(), FourthPage()];
+  PageController pageController = PageController();
 
-  int currentIndex = 0;
+  List<Widget> pages = [];
+
+  _HomeScreenState()
+  {
+    pages.add(FirstPage(pageController));
+    pages.add(PickOneFormPage(title: "Choose your favorite  activity", pageController: pageController));
+    pages.add(PickOneFormPage(title: "What’s your go-to stress reliever?", pageController: pageController,));
+    pages.add(PickOneFormPage(title: "What’s your main goal?", pageController: pageController,));
+    pages.add(SummaryPage(onStartClicked: () => {
+
+    Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => MoodPicker(OnBoardingFormData(name: FirstPage.controller.text)),
+    ),
+  )
+    }));
+  }
 
   @override
   Widget build(BuildContext context) {
-    print('called');
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -54,12 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(15),
                 child: PageView(
+                  pageSnapping: true,
+                  controller: pageController, 
+                  physics: NeverScrollableScrollPhysics(), 
                   children: pages,
-                  onPageChanged: (i){
-                    setState(() {
-                      currentIndex = i;
-                    });
-                  },
                   padEnds: true,
                 ),
               ),

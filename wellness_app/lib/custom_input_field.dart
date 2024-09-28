@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CustomInputField extends StatelessWidget {
+  final TextEditingController? controller;
+  final Function() onSubmit;
+  
+  CustomInputField({super.key, this.controller, required void Function() this.onSubmit});
+
+
   @override
   Widget build(BuildContext context) {
     
@@ -23,7 +29,8 @@ class CustomInputField extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: TextField(
+            child: TextFormField(
+              controller: controller,
               decoration: InputDecoration(
                 hintText: 'Your Name',
                 hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant),
@@ -51,7 +58,7 @@ class CustomInputField extends StatelessWidget {
               icon: Icon(Icons.arrow_forward,
                   color: Theme.of(context).primaryColor),
               onPressed: () {
-                // Action when button is pressed
+                onSubmit();
               },
             ),
           ),

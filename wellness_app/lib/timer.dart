@@ -3,20 +3,21 @@ import 'dart:async';
 import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 
-class TimerPage extends StatefulWidget {
-  const TimerPage({super.key});
+class CountdownTimer extends StatefulWidget {
+  const CountdownTimer({super.key});
 
   @override
-  State<StatefulWidget> createState() => _TimerPageState();
+  State<StatefulWidget> createState() => _CountdownTimerState();
 }
 
-class _TimerPageState extends State<TimerPage> {
+class _CountdownTimerState extends State<CountdownTimer> {
   final double maxSeconds = 60;
   double seconds = 60;
   final ValueNotifier<double> _valueNotifier = ValueNotifier(0);
+  Timer? _timer;
 
-  _TimerPageState() {
-    Timer.periodic(const Duration(seconds: 1), (Timer t) {
+  _CountdownTimerState() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       setState(() {
         if (seconds > 1) {
           seconds--;
@@ -25,6 +26,12 @@ class _TimerPageState extends State<TimerPage> {
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
   }
 
   @override
