@@ -3,9 +3,10 @@ import 'package:rive/rive.dart';
 import 'package:wellness_app/breathing_excercise.dart';
 import 'package:wellness_app/form_pages.dart';
 
+GlobalKey<DashboardState> gk = GlobalKey();
 class Dashboard extends StatefulWidget {
   final OnBoardingFormData formData;
-  Dashboard(this.formData);
+  Dashboard(this.formData) : super(key: gk);
 
   @override
   State<StatefulWidget> createState() => DashboardState(formData);
@@ -14,13 +15,14 @@ class Dashboard extends StatefulWidget {
 class DashboardState extends State<Dashboard> {
   static int activeEmotion = 1;
   final OnBoardingFormData formData;
+  SMINumber? emotion; 
 
   final breathingAction = EmotionAction("Breathing exercise", 5, (c) => BreathingPage(60 * 5, "Slowly take a deep breaths"));
-  final meditateAction = EmotionAction("Meditate", 15, (c) => BreathingPage(5, "Lay down, close your eyes and clear your mind"));
+  final meditateAction = EmotionAction("Meditate", 15, (c) => BreathingPage(15 * 60, "Lay down, close your eyes and clear your mind"));
   final journalAction = EmotionAction("Journal", 10, (c) => BreathingPage(60 * 10, "Write down the most recent event in your life"));
   final napAction = EmotionAction("Short nap", 20, (c) => BreathingPage(20 * 60, "Zzzzzz..."));
   final sprintAction = EmotionAction("Sprint as fast as you can", 5, (c) => BreathingPage(5 * 60, "Sprint!"));
-  final nameAction = EmotionAction("5-4-3-2-1 Coping Technique", 5, (c) => BreathingPage(5 * 60, "Identify 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste"));
+  final nameAction = EmotionAction("5-4-3-2-1 Coping Technique", 5, (c) => BreathingPage(5, "Identify 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste"));
   final takeAwalk = EmotionAction("Take a walk", 30, (c) => BreathingPage(30 * 60, "Take a slow mindful walk"));
 
   final happyActions = [];
@@ -52,6 +54,12 @@ class DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+
+    if(emotion != null)
+    {
+      emotion!.value = activeEmotion.toDouble();
+    }
+
     return SafeArea(child: Scaffold(
       body: Padding(
       padding: EdgeInsets.all(20),
@@ -64,7 +72,7 @@ class DashboardState extends State<Dashboard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  const Text("Today's mood"),
+                  const Text("Mubu's mood"),
                   Text("${MoodPickerState.emotions[activeEmotion - 1]}", style: TextStyle(fontSize: 40, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w700)),
                   FilledButton(onPressed: () => {
                     Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => MoodPicker(formData)))
@@ -152,7 +160,8 @@ class DashboardState extends State<Dashboard> {
     final controller = StateMachineController.fromArtboard(artboard, "States");
     artboard.addController(controller!);
 
-    (controller.inputs.first as SMINumber).value = activeEmotion.toDouble();
+    emotion = (controller.inputs.first as SMINumber);
+    emotion!.value = activeEmotion.toDouble();
   }
 }
 
@@ -220,8 +229,11 @@ class MoodPickerState extends State<MoodPicker> {
                           setState(() {
                             _value = selected ? index : 0;
                             DashboardState.activeEmotion = (_value! + 1);
+                            gk.currentState?.setState(() {
+                              
                             _emotion!.value =
                                 DashboardState.activeEmotion.toDouble();
+                            });
                           });
                         },
                       ),
@@ -232,7 +244,13 @@ class MoodPickerState extends State<MoodPicker> {
               SizedBox(height: 20),
               FilledButton(
                   onPressed: () => {
+                    if(gk.currentState != null)
+                    {
+                        Navigator.of(context).pop()
+                    }
+                    else{
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Dashboard(formData)))
+                    }
                   },
                   child: Text("Save", style: TextStyle(fontSize: 20)))
             ],
