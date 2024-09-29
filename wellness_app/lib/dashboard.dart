@@ -33,6 +33,42 @@ class DashboardState extends State<Dashboard> {
   final scaredActions = [];
 
   final List<List<dynamic>> activeEmotionActions = [];
+
+final anxiousTips = ["Tense and release muscles in your body to relieve anxiety.", "Avoid caffeine, alcohol, or sugar, which can exacerbate anxious feelings.",
+  "Activities like knitting, painting, or gardening can be soothing and take your mind off worries."];
+
+  final happyTips = [
+  "Practice gratitude by writing down three things you're thankful for.",
+  "Engage in activities that bring you joy, like dancing, reading, or playing a game.",
+  "Spend time with loved ones or engage in random acts of kindness."
+];
+
+final sadTips = [
+  "Allow yourself to feel the sadness without judgment, it's okay to not be okay.",
+  "Engage in self-care activities like taking a bath, journaling, or watching a comforting movie.",
+  "Talk to a trusted friend or therapist about how you're feeling."
+];
+
+final angryTips = [
+  "Take deep breaths and count to 10 to cool down before reacting.",
+  "Engage in physical activities like running or punching a pillow to release pent-up anger.",
+  "Write down your thoughts or vent in a journal to express your feelings without hurting others."
+];
+
+final calmTips = [
+  "Practice deep breathing exercises or meditation to center yourself.",
+  "Listen to calming music or nature sounds to create a peaceful environment.",
+  "Take a slow walk in nature or practice yoga to relax your mind and body."
+];
+
+final scaredTips = [
+  "Ground yourself by focusing on your breath and naming things you can see, hear, and touch.",
+  "Remind yourself that fear is often temporary and the feeling will pass.",
+  "Talk through your fears with someone you trust, which can provide perspective and comfort."
+];
+
+
+  final List<List<String>> activeEmotionTips = [];
   
   DashboardState(this.formData){
     sadActions.add(breathingAction);
@@ -50,6 +86,13 @@ class DashboardState extends State<Dashboard> {
     activeEmotionActions.add(calmActions);
     activeEmotionActions.add(anxiousActions);
     activeEmotionActions.add(scaredActions);
+
+    activeEmotionTips.add(happyTips);
+    activeEmotionTips.add(sadTips);
+    activeEmotionTips.add(angryTips);
+    activeEmotionTips.add(calmTips);
+    activeEmotionTips.add(anxiousTips);
+    activeEmotionTips.add(scaredTips);
   }
 
   @override
@@ -64,6 +107,7 @@ class DashboardState extends State<Dashboard> {
       body: Padding(
       padding: EdgeInsets.all(20),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Container(
             child: Row(
@@ -145,9 +189,32 @@ class DashboardState extends State<Dashboard> {
                       ),
                     ),
                   );
-                })
-                ),
-                ]
+                }),
+              ),
+              SizedBox(height: 20),
+              Text("Mubu's tips"),
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: List.generate(activeEmotionTips[activeEmotion - 1].length, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Color.fromARGB(255, 184, 184, 184)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12),
+                            child: Text(activeEmotionTips[activeEmotion - 1][index], style: 
+                            TextStyle(color: Color.fromARGB(255, 0, 0, 0))),
+                          ),
+                        ),
+                      );
+                  })
+                  ),
+              ),
+              ],
               ),
             ),
           )
