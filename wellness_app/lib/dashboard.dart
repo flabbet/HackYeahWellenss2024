@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:wellness_app/breathing_excercise.dart';
 import 'package:wellness_app/form_pages.dart';
+import 'package:wellness_app/journal_page.dart';
 
 GlobalKey<DashboardState> gk = GlobalKey();
 class Dashboard extends StatefulWidget {
@@ -19,7 +20,7 @@ class DashboardState extends State<Dashboard> {
 
   final breathingAction = EmotionAction("Breathing exercise", 5, (c) => BreathingPage(60 * 5, "Slowly take a deep breaths"));
   final meditateAction = EmotionAction("Meditate", 15, (c) => BreathingPage(15 * 60, "Lay down, close your eyes and clear your mind"));
-  final journalAction = EmotionAction("Journal", 10, (c) => BreathingPage(60 * 10, "Write down the most recent event in your life"));
+  final journalAction = EmotionAction("Journal", 10, (c) => JournalPage()); 
   final napAction = EmotionAction("Short nap", 20, (c) => BreathingPage(20 * 60, "Zzzzzz..."));
   final sprintAction = EmotionAction("Sprint as fast as you can", 5, (c) => BreathingPage(5 * 60, "Sprint!"));
   final nameAction = EmotionAction("5-4-3-2-1 Coping Technique", 5, (c) => BreathingPage(10, "Identify 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste"));
