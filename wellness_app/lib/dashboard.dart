@@ -15,15 +15,46 @@ class DashboardState extends State<Dashboard> {
   static int activeEmotion = 1;
   final OnBoardingFormData formData;
 
-  final breathingAction = EmotionAction("Breathing exercise", (c) => BreathingPage());
+  final breathingAction = EmotionAction("Breathing exercise", 5, (c) => BreathingPage(60 * 5, "Slowly take a deep breaths"));
+  final meditateAction = EmotionAction("Meditate", 15, (c) => BreathingPage(5, "Lay down, close your eyes and clear your mind"));
+  final journalAction = EmotionAction("Journal", 10, (c) => BreathingPage(60 * 10, "Write down the most recent event in your life"));
+  final napAction = EmotionAction("Short nap", 20, (c) => BreathingPage(20 * 60, "Zzzzzz..."));
+  final sprintAction = EmotionAction("Sprint as fast as you can", 5, (c) => BreathingPage(5 * 60, "Sprint!"));
+  final nameAction = EmotionAction("5-4-3-2-1 Coping Technique", 5, (c) => BreathingPage(5 * 60, "Identify 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste"));
+  final takeAwalk = EmotionAction("Take a walk", 30, (c) => BreathingPage(30 * 60, "Take a slow mindful walk"));
+
+  final happyActions = [];
+  final sadActions = [];
+  final angryActions = [];
+  final calmActions = [];
+  final anxiousActions = [];
+  final scaredActions = [];
+
+  final List<List<dynamic>> activeEmotionActions = [];
   
-  DashboardState(this.formData);
+  DashboardState(this.formData){
+    sadActions.add(breathingAction);
+    anxiousActions.add(meditateAction);
+    anxiousActions.add(takeAwalk);
+    happyActions.add(journalAction);
+    angryActions.add(sprintAction);
+    scaredActions.add(nameAction);
+    calmActions.add(journalAction);
+    sadActions.add(napAction);
+
+    activeEmotionActions.add(happyActions);
+    activeEmotionActions.add(sadActions);
+    activeEmotionActions.add(angryActions);
+    activeEmotionActions.add(calmActions);
+    activeEmotionActions.add(anxiousActions);
+    activeEmotionActions.add(scaredActions);
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(child: Scaffold(
       body: Padding(
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(20),
       child: Column(
         children: [
           Container(
@@ -57,25 +88,59 @@ class DashboardState extends State<Dashboard> {
               ],
             ),
           ),
-          Container(
-            child: Column(
-              children: [
-                Text.rich(TextSpan(
-                  children: [
-                    TextSpan(text: "Here's what you can do when "),
-                    TextSpan(text: "${MoodPickerState.emotions[activeEmotion - 1]}", style: TextStyle(fontWeight: FontWeight.bold))
-                  ])),
-              Column(
-                children: 
-              List.generate(1, (index) {
-                return FilledButton(child: Text(breathingAction.actionName), onPressed: ()=> {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: 
-                    breathingAction.widgetToPush))
-                });
-              })
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+            child: Container(
+              child: Column(
+                children: [
+                  Text.rich(TextSpan(
+                    children: [
+                      TextSpan(text: "Here's what you can do when "),
+                      TextSpan(text: "${MoodPickerState.emotions[activeEmotion - 1]}", style: TextStyle(fontWeight: FontWeight.bold))
+                    ])),
+                    SizedBox(height: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: 
+                List.generate(activeEmotionActions[activeEmotion - 1].length, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: Container(
+                      height: 61,
+                      decoration:
+                      BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                        borderRadius: BorderRadius.circular(8)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("${activeEmotionActions[activeEmotion - 1][index].actionName}", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                                Text("${activeEmotionActions[activeEmotion - 1][index].time} minutes", style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurfaceVariant))
+                              ],
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.play_circle_fill_outlined, 
+                              color: Theme.of(context).colorScheme.onSurface, size: 26),
+                               onPressed: () => {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: activeEmotionActions[activeEmotion - 1][index].widgetToPush)
+                                )
+                            }),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                })
+                ),
+                ]
               ),
-              ]
             ),
           )
         ],
@@ -189,7 +254,8 @@ class MoodPickerState extends State<MoodPicker> {
 class EmotionAction
 {
   String actionName;
+  int time;
   Widget Function(BuildContext) widgetToPush;
 
-  EmotionAction(this.actionName, this.widgetToPush); 
+  EmotionAction(this.actionName, this.time, this.widgetToPush); 
 }

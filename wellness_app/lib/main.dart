@@ -47,10 +47,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _HomeScreenState()
   {
+    final favActivityTiles = [TileData("SPORT", "assets/sport.png"), 
+    TileData("YOGA", "assets/yoga.png"), TileData("MEDITATION", "assets/meditation.png"),
+    TileData("JOURNALING", "assets/journaling.png"), TileData("MUSIC", "assets/music.png"), TileData("TIME WITH FRIENDS", "assets/social.png")];
+
+    final stressRelievers = [TileData("BREATHING EXERCISES", "assets/meditation.png"), 
+    TileData("TALKING TO SOMEONE", "assets/social.png"), TileData("WATCHING A MOVIE", "assets/movie.png"),
+    TileData("EXERCISE/WORKOUT", "assets/sport.png"), TileData("READING A BOOK", "assets/books.png"), TileData("I'M NOT SURE", null)];
+
+    final goals = [TileData("MANAGING STRESS", "assets/head.png"), TileData("INCREASING HAPPINESS", "assets/smile.png"),
+    TileData("MOOD TRACKING", "assets/tracking.png"), TileData("FEELIONG MORE PRODUCTIVE", "assets/plan.png"),
+    TileData("IMPROVING SLEEP", "assets/sleep.png"), TileData("BUILDING POSITIVE HABITS", "assets/calendar.png")];
+
     pages.add(FirstPage(pageController));
-    pages.add(PickOneFormPage(title: "Choose your favorite  activity", pageController: pageController));
-    pages.add(PickOneFormPage(title: "What’s your go-to stress reliever?", pageController: pageController,));
-    pages.add(PickOneFormPage(title: "What’s your main goal?", pageController: pageController,));
+    pages.add(PickOneFormPage(title: "Choose your favorite  activity", pageController: pageController, tiles: favActivityTiles));
+    pages.add(PickOneFormPage(title: "What’s your go-to stress reliever?", pageController: pageController, tiles: stressRelievers));
+    pages.add(PickOneFormPage(title: "What’s your main goal?", pageController: pageController, tiles: goals));
     pages.add(SummaryPage(onStartClicked: () => {
 
     Navigator.of(context).push(

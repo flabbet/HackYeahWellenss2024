@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rive/rive.dart';
 import 'package:wellness_app/custom_input_field.dart';
 import 'package:wellness_app/dashboard.dart';
 import 'package:wellness_app/homepage.dart';
+import 'package:flutter/src/widgets/image.dart' as flutter_img;
 
 class FirstPage extends StatelessWidget {
   static var controller = TextEditingController();
@@ -19,7 +21,10 @@ class FirstPage extends StatelessWidget {
         children: [
           Container(
               alignment: Alignment.center,
-              child: SvgPicture.asset("assets/Logo.svg")),
+              child: SizedBox(
+                width: 300,
+                height: 150,
+                child: RiveAnimation.asset("assets/Logo.riv"))),
           const Text.rich(
               textAlign: TextAlign.center,
               const TextSpan(children: [
@@ -59,11 +64,22 @@ class FirstPage extends StatelessWidget {
   }
 }
 
-class PickOneFormPage extends StatelessWidget {
-  static var controller = TextEditingController();
+class PickOneFormPage extends StatefulWidget
+{
   final String title;
   final PageController pageController;
-  const PickOneFormPage({super.key, this.title = "", required this.pageController});
+  final List<TileData>? tiles;
+  const PickOneFormPage({super.key, this.title = "", this.tiles = null, required this.pageController});
+  
+  @override
+  State<StatefulWidget> createState() => PickOneFormPageState();
+
+  
+}
+
+class PickOneFormPageState extends State<PickOneFormPage> {
+  static var controller = TextEditingController();
+  int? selected;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +88,7 @@ class PickOneFormPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-          Text(title,
+          Text(widget.title,
               textAlign: TextAlign.center, style: TextStyle(fontSize: 24)),
           Center(
             child: SizedBox(
@@ -81,16 +97,31 @@ class PickOneFormPage extends StatelessWidget {
                   crossAxisCount: 2, // Determines the number of columns,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  children: List.generate(6, (index) {
+                  children: List.generate(widget.tiles?.length ?? 0, (index) {
                     return GridTile(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color:
-                              Theme.of(context).colorScheme.surfaceContainerHigh,
-                        ),
-                        child: Center(
-                          child: Text('Tile $index'),
+                      child: GestureDetector(
+                        onTap: () => {
+                          setState(() {
+                            selected = index;
+                          })
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: 
+                                selected != index ? Colors.transparent : Theme.of(context).colorScheme.primary),
+                            color: Theme.of(context).colorScheme.surfaceContainerHigh
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              widget.tiles![index].image != null ? flutter_img.Image.asset(widget.tiles![index].image!, width: 96, height: 96,) : Container(),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                child: Text(widget.tiles![index].title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14), textAlign: TextAlign.center),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -110,7 +141,7 @@ class PickOneFormPage extends StatelessWidget {
               height: 50,
               child: FilledButton(
                   onPressed: () => {
-                    pageController.jumpToPage(pageController.page!.toInt() + 1)
+                    widget.pageController.jumpToPage(widget.pageController.page!.toInt() + 1)
                   },
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -122,6 +153,14 @@ class PickOneFormPage extends StatelessWidget {
           ]),
         ]));
   }
+}
+
+class TileData
+{
+  String title;
+  String? image;
+
+  TileData(this.title, this.image);
 }
 
 class SummaryPage extends StatelessWidget {
@@ -138,7 +177,10 @@ class SummaryPage extends StatelessWidget {
         children: [
           Container(
               alignment: Alignment.center,
-              child: SvgPicture.asset("assets/Logo.svg")),
+              child: SizedBox(
+                width: 300,
+                height: 150,
+                child: RiveAnimation.asset("assets/Logo.riv"))),
           const Text("You're all set!", style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700)),
           const Text("Lets's get started on your first mood check-in", textAlign: TextAlign.center,
           style: TextStyle(fontSize: 24)),
