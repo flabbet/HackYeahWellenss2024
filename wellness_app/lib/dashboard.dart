@@ -22,7 +22,7 @@ class DashboardState extends State<Dashboard> {
   final journalAction = EmotionAction("Journal", 10, (c) => BreathingPage(60 * 10, "Write down the most recent event in your life"));
   final napAction = EmotionAction("Short nap", 20, (c) => BreathingPage(20 * 60, "Zzzzzz..."));
   final sprintAction = EmotionAction("Sprint as fast as you can", 5, (c) => BreathingPage(5 * 60, "Sprint!"));
-  final nameAction = EmotionAction("5-4-3-2-1 Coping Technique", 5, (c) => BreathingPage(5, "Identify 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste"));
+  final nameAction = EmotionAction("5-4-3-2-1 Coping Technique", 5, (c) => BreathingPage(10, "Identify 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste"));
   final takeAwalk = EmotionAction("Take a walk", 30, (c) => BreathingPage(30 * 60, "Take a slow mindful walk"));
 
   final happyActions = [];
@@ -229,6 +229,8 @@ class MoodPickerState extends State<MoodPicker> {
                           setState(() {
                             _value = selected ? index : 0;
                             DashboardState.activeEmotion = (_value! + 1);
+                            _emotion!.value =
+                                DashboardState.activeEmotion.toDouble();
                             gk.currentState?.setState(() {
                               
                             _emotion!.value =
